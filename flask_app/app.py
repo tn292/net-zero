@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import spacy
 
-# Load the pre-trained NLP model with word embeddings
+app = Flask(__name__)
+
+# Load pre-trained NLP model
 nlp = spacy.load("en_core_web_md")
 
-# Define the categories and descriptions
 categories = {
     "Transportation": "items related to the movement of people or goods, including vehicles, fuels, and public transport",
     "Plastics": "materials or items made of synthetic polymers, such as plastic bottles, bags, and containers",
@@ -30,23 +31,19 @@ def categorize_item(item, categories):
             best_match = category
     return best_match
 
-def categorize(items):
-    categorized_items = [(item, categorize_item(item, categories)) for item in items]
-    return categorized_items
-
-# Flask app setup
-app = Flask(__name__)
-
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    if request.method == 'POST':
-        user_input = request.form['user_input']  # Get the input from the form
-        items = [item.strip() for item in user_input.split(',')]  # Split by commas and strip spaces
-        categorized_items = categorize(items)  # Categorize each item
-
-        # Render the result in the template
-        return render_template('result.html', categorized_items=categorized_items)
+@app.route('/')
+def index():
     return render_template('index.html')
+
+@app.route('/new-page')
+def new_page():
+    return render_template('new_page.html')
+
+@app.route('/categorize', methods=['POST'])
+def categorize():
+    user_input = request.form['user_input']
+    category = categorize_item(user_input, categories)
+    return jsonify({"category": category})
 
 if __name__ == '__main__':
     app.run(debug=True)

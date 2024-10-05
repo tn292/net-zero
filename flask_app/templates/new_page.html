@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Categorization</title>
+  <style>
+    /* Basic layout for two sides */
+    .container {
+      display: flex;
+      height: 100vh;
+      margin-top: 80px;
+    }
+
+    .left-side,
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .left-side {
+      background-color: #ffffff;
+      flex-direction: column;
+    }
+
+    .right-side {
+      background-color: #ffffff;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    /* Style for the tab bar */
+    .tab-bar {
+      background-color: black;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      z-index: 100;
+    }
+
+    .tab-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .tab-bar a:hover {
+      background-color: #333;
+      border-radius: 5px;
+    }
+
+    /* Style for the form */
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-container input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 300px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-container input[type="submit"] {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .form-container input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    /* Different styles for each image */
+    .image1 {
+      width: 50%;
+      height: auto;
+    }
+
+    .image2 {
+      width: 90%;
+      height: auto;
+      margin-top: 0;
+    }
+
+    .result-textbox {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 18px;
+      width: 300px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tab-bar">
+    <a href="/">Back to Home</a>
+  </div>
+
+  <div class="container">
+    <!-- Left side with a text box and submit button -->
+    <div class="left-side">
+      <form class="form-container" id="categorization-form">
+        <input type="text" name="user_input" id="user_input" placeholder="Enter some text" required>
+        <input type="submit" value="Submit">
+      </form>
+      <!-- This div will hold the categorized result dynamically -->
+      <div id="result-container"></div>
+    </div>
+
+    <!-- Right side with two images -->
+    <div class="right-side">
+      <img class="image1" src="{{ url_for('static', filename='../static/character.png') }}" alt="Image 1">
+      <img class="image2" src="{{ url_for('static', filename='../static/world-map.png') }}" alt="Image 2">
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('categorization-form').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent the form from submitting the traditional way
+      const userInput = document.getElementById('user_input').value;
+
+      // Send the user input to the Flask backend using fetch
+      fetch('/categorize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ user_input: userInput })
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Create a new result box dynamically and insert it into the DOM
+          const resultBox = document.createElement('div');
+          resultBox.className = 'result-textbox';
+          resultBox.innerHTML = `Item: ${userInput} -> Category: ${data.category}`;
+
+          // Append the result box to the result-container div
+          document.getElementById('result-container').appendChild(resultBox);
+
+          // Clear the input field for further entries
+          document.getElementById('user_input').value = '';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+
+</body>
+
+</html>
