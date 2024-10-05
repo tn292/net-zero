@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two Sided Layout with Different Image Sizes</title>
+  <style>
+    /* Basic layout for two sides */
+    .container {
+      display: flex;
+      height: 100vh;
+      /* margin-top: 80px; */
+      border-top: 5em solid #000;
+    }
+
+    .left-side,
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .left-side {
+      background-color: #ffffff;
+    }
+
+    .right-side {
+      background-color: #ffffff;
+      flex-direction: column;
+      justify-content: space-around;
+
+    }
+
+    /* Style for the button */
+    button {
+      padding: 50px 85px;
+      font-size: 45px;
+      background-color: #050606;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Different styles for each image */
+    .image1 {
+      width: 50%;
+      /* Image 1 is 70% of the container width */
+      height: auto;
+    }
+
+    .image2 {
+      width: 90%;
+      /* Image 2 is 40% of the container width */
+      height: auto;
+      margin-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Left side with the button -->
+    <div class="left-side">
+      <button onclick="alert('Button clicked!')">START</button>
+    </div>
+
+    <!-- Right side with two images -->
+    <div class="right-side">
+      <img class="image1" src="{{ url_for('static', filename='../static/character.png') }}" alt="Image 1">
+      <img class="image2" src="{{ url_for('static', filename='../static/world-map.png') }}" alt="Image 2">
+    </div>
+  </div>
+</body>
+
+</html>

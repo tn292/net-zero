@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Categorization Results</title>
+</head>
+
+<body>
+  <h1>Categorized Items</h1>
+  <ul>
+    {% for item, category in categorized_items %}
+    <li><strong>Item:</strong> {{ item }} -> <strong>Category:</strong> {{ category }}</li>
+    {% endfor %}
+  </ul>
+  <a href="/">Go Back</a>
+</body>
+
+</html>
